@@ -1,40 +1,63 @@
+version: "3.9"
+
 services:
+  db:
+    image: postgres:16-alpine
+    container_name: smartmacros-db
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - smartmacros_db_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
   backend:
     build:
       context: .
       dockerfile: backend/Dockerfile
-    container_name: SmartMacros-backend
+    container_name: smartmacros-backend
     command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+    env_file: .env
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
     volumes:
       - ./backend/app:/app/app:rw
       - ./backend/requirements.txt:/app/requirements.txt:ro
     ports:
       - "8000:8000"
-    environment:
-      - PYTHONUNBUFFERED=1
+    depends_on:
+      db:
+        condition: service_healthy
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      test: ["CMD", "wget", "-qO", "-", "http://localhost:8000/health"]
       interval: 10s
-      timeout: 3s
-      retries: 5
+      timeout: 5s
+      retries: 10
 
   frontend:
     build:
       context: .
       dockerfile: frontend/Dockerfile
       target: dev
-    container_name: SmartMacros-frontend
+    container_name: smartmacros-frontend
+    env_file: .env
+    environment:
+      VITE_API_URL: http://localhost:9999
     volumes:
       - ./frontend:/app:rw
       - /app/node_modules
     ports:
       - "5173:5173"
-    environment:
-      - VITE_API_URL=http://localhost:8000
     depends_on:
       backend:
-        condition: service_healthy
+        condition: service_started
 
-networks:
-  default:
-    name: SmartMacros-net
+volumes:
+  smartmacros_db_data: {}
