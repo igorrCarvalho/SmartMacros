@@ -28,9 +28,7 @@ services:
     environment:
       DATABASE_URL: ${DATABASE_URL}
     volumes:
-      - ./backend/app:/app/app:rw
-      - ./backend/requirements.txt:/app/requirements.txt:ro
-      - ./backend/migrations:/app/migrations:rw
+      - ./backend:/app 
     ports:
       - "8000:8000"
     depends_on:
