@@ -1,8 +1,15 @@
 import { Link } from "react-router-dom";
 import { Button } from "../../components/ui/button";
 import { Input } from "../../components/ui/input";
+import { useAuthenticationStore } from "../../stores/useAuthenticationStore";
 
 export default function Introduction({}) {
+  const { setEmail, email } = useAuthenticationStore((state) => state);
+
+  function handleInputChange(e: React.ChangeEvent<HTMLInputElement>): void {
+    const { value } = e.target;
+    setEmail(value);
+  }
 
   return (
     <div className="w-full h-full flex flex-col gap-5 items-center justify-center">
@@ -16,7 +23,12 @@ export default function Introduction({}) {
         </div>
         <div className="w-full flex items-center justify-center">
             <div className="relative w-fit">
-                <Input placeholder="Enter your email" className="w-[90vw] min-[475px]:w-md py-4" />
+                <Input
+                    onChange={handleInputChange}
+                    value={email}
+                    placeholder="Enter your email"
+                    className="w-[90vw] min-[475px]:w-md py-4"
+                />
                 <Link to="/signup">
                     <Button className="absolute right-0.5 top-0.5 cursor-pointer h-8" variant={"default"}>Register</Button>
                 </Link>
