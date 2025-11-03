@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from app.core import session_filters
 
 app = FastAPI(title="SmartMacros API", version="0.1.0")
 
