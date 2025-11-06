@@ -35,4 +35,4 @@ def create_refresh_token(sub: str) -> str:
         "type": "refresh",
         "exp": _exp_in_days(settings.REFRESH_TOKEN_EXPIRES_DAYS),
     }
-    return jwt.encode(payload, SECRET, algorithm=ALGORITHM)
+    return jwt.encode(payload, settings.JWT_SECRET, algorithm=settings.JWT_ALG)
