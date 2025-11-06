@@ -78,6 +78,11 @@ async def refresh(request: Request, response: Response):
     new_access = create_access_token(sub=email)
     return {"access_token": new_access}
 
+@auth_router.post("/logout")
+async def logout(response: Response):
+    clear_refresh_cookie(response)
+    return {"ok": True}
+
 @auth_router.get("/me", response_model=UserRead)
 async def me(current: User = Depends(get_current_user)):
     return UserRead.model_validate(current)
