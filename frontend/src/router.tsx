@@ -6,10 +6,11 @@ import Dashboard from "./Pages/Dashboard";
 import type { JSX } from "react";
 import PublicLayout from "./layouts/PublicLayout";
 import Introduction from "./Pages/Introduction";
+import { useAuthenticationStore } from "./stores/useAuthenticationStore";
 
 function Protected({ children }: { children: JSX.Element }) {
-  const { isAuthenticated } = useAuth();
-  if (!isAuthenticated) return <Navigate to="/" replace />;
+  const { token } = useAuthenticationStore((state) => state);
+  if (!token) return <Navigate to="/" replace />;
   return children;
 }
 
