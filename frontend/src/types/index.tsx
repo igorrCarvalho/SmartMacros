@@ -18,10 +18,16 @@ export type UserAuthenticationProps = {
 
 export type AuthenticationStore = {
   isAuth: boolean;
+  token: string | null;
   email: string;
   password: string;
+  isHydrated: boolean;
+  logout: () => void;
+  setIsHydrated: (isHydrated: boolean) => void;
   setPassword: (password: string) => void;
   setEmail: (email: string) => void;
+  setIsAuth: (isAuth: boolean) => void;
+  setToken: (token: string) => void;
 }
 
 export type AuthenticationFormProps = {
@@ -36,6 +42,16 @@ export type AuthenticationFormProps = {
 export type SignUpBody = {
   email: string;
   password: string;
+}
+
+export type SignInBody = {
+  email: string;
+  password: string;
+}
+
+export type SignInResponse = {
+  access_token: string;
+  token_type: string;
 }
 
 export type SignUpResponse = {
