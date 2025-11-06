@@ -4,7 +4,6 @@ import SignUp from "./components/SignUp";
 import type { UserAuthenticationProps } from "../../types";
 
 export default function UserAuthentication({ type }: UserAuthenticationProps) {
-
     const authPagesOptions = {
         signIn: SignIn,
         signUp: SignUp,
